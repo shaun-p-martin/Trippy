@@ -2,127 +2,149 @@
 
 ## Overview
 
-Trippy is a collaborative trip planning application that helps groups plan travel together and manage shared expenses with built-in reimbursement tracking.
+Trippy is a collaborative group trip planner. Multiple people (TripMates) plan a trip together: compile and discuss ideas for places and activities, share a schedule, and track shared expenses with reimbursement status.
+
+Primary planning source: Notion project *“Trippy” (Group Trip Planner)* and *Stories & Entities*.
 
 ## Problem Statement
 
-Planning group trips is challenging:
+Planning group trips is hard:
 
-- Coordinating schedules, destinations, and activities across multiple people
-- Tracking who paid for what during the trip
-- Settling up expenses fairly after the trip ends
+- Coordinating stops, dates, and activities across multiple people
+- Compiling and debating ideas in one shared place
+- Tracking who paid for what and settling up fairly
 
-## Target Users
+## Target Users & Scope
 
-- Friend groups planning vacations together
-- Families coordinating travel
+- Friend groups and families planning leisure travel
+- **In scope focus:** US-based travelers first
+- **Out of focus:** business travel; non-US-first productization
 
 ## Group Size
 
-- Optimized for 6-12 members per trip
-- Maximum supported: 20-25 members
+- Optimized for roughly 6–12 members per trip
+- Soft max ~20–25 members
+
+## Domain Language
+
+| Term | Meaning |
+| --- | --- |
+| **Traveler** | User profile / account in Trippy |
+| **Trip** | Root collaborative entity (dates, stops, membership) |
+| **TripStop** | City/region where one or more TripMates spend time |
+| **Tripmate** | Membership of a Traveler on a Trip, with a role |
+| **Idea** | Candidate activity/place/dining for the trip |
+| **Expense** | Shared cost with payer, total, and per-person contributions |
 
 ## Core Features
 
-### 1. Trip Planning
+### 1. Account (Traveler)
 
-- [ ] Create and manage trips with dates, destinations
-- [ ] Invite collaborators via email/link
-- [ ] Add unscheduled ideas (destinations, activities, events, dining)
-- [ ] "Like" ideas to signal interest
-- [ ] Schedule ideas (date-flexible or specific time)
-- [ ] Add logistical itinerary items (flights, lodging)
-- [ ] Shared calendar view of trip schedule
-- [ ] Discussion/comments on ideas and itinerary items
+- Create account; later: 3rd-party auth
+- Edit profile (name, contact, preferred payout handles)
+- Disable account
 
-### 2. Expense Tracking
+### 2. Trip administration
 
-- [ ] Log expenses with amount, category, payer
-- [ ] Attach receipts (photo upload)
-- [ ] Split expenses equally or custom amounts
-- [ ] Expenses can be posted in multiple currencies
-- [ ] Display currency based on user preference
-- [ ] Real-time expense dashboard
+- Create trip with start/end dates (date-only)
+- Manage TripStops (locations with optional per-mate arrival/departure)
+- Archive past trips (later UX)
 
-### 3. Reimbursement
+### 3. Tripmate management
 
-- [ ] Calculate who owes whom
-- [ ] Minimize transactions (debt simplification)
-- [ ] Mark payments as settled
-- [ ] Payment reminders
+- Invite by role: Viewer, Commenter, Contributor, Administrator
+- Change role; remove from trip
+- Accept invite via token/link
 
-### 4. Notifications
+### 4. Ideas
 
-- [ ] Email notifications for trip activity
-- [ ] In-app notifications
+- [x] Add / edit / browse ideas (types, maps links, contact)
+- [x] Comment and react (like)
+- [ ] Schedule an idea onto the group plan (Phase 3)
+- Later: merge similar ideas; AI generate/recommend (not v1)
+
+### 5. Schedule
+
+- Combined schedule and personal schedule views
+- Travel legs (add/remove/modify)
+- Plan activities from ideas
+
+### 6. Expenses & reimbursement
+
+- Create expenses (optionally link Ideas[])
+- Splits/contributions per person with settlement status
+- Mark settled; attach payment proof (later)
+- Surface preferred payout methods from Traveler profile (no in-app payment rails v1)
+
+### 7. Notifications (later)
+
+- Email + in-app for invites and trip activity
 
 ## Roles & Permissions
 
-### Organizer
+| Action | Viewer | Commenter | Contributor | Administrator |
+| --- | --- | --- | --- | --- |
+| View trip, ideas, schedule | Yes | Yes | Yes | Yes |
+| View expenses | Yes* | Yes | Yes | Yes |
+| Comment / react | No | Yes | Yes | Yes |
+| Create/edit own ideas, schedule items, expenses | No | No | Yes | Yes |
+| Edit/delete others’ content | No | No | No | Yes |
+| Invite / change roles / remove mates | No | No | No | Yes |
+| Modify trip details & stops | No | No | No | Yes |
+| Merge ideas (later) | No | No | No | Yes |
 
-- Can modify any trip details
-- Can modify any idea, itinerary item, expense, or reimbursement
-- Can invite/remove members
+\*Expense visibility for pure Viewer may be tightened later; v0 treats trip members as able to see balances unless we productize a guest-only invite path.
 
-### Contributor
+Every Trip must always have **at least one Administrator**.
 
-- Can modify their own profile details
-- Can only modify ideas, itinerary items, expenses, or reimbursements they created
-- Can view all trip content
+## Idea types
 
-### Guest (no account)
+Dining, Entertainment & Dining, Tour, Guided Activity, Unguided Activity, Sightseeing/Landmark, Shopping, Supplies & Provisions, Other
 
-- Can view ideas and itinerary (read-only)
-- Cannot add or modify any content
-- Cannot view expenses or reimbursements
+## Expense statuses (settlement-oriented)
 
-## User Stories
+**Expense**
 
-### Trip Organizer
+- Not Yet Paid
+- Paid Awaiting Reimbursement
+- Paid, Fully Settled
 
-- As an organizer, I want to create a trip and invite friends so we can plan together
-- As an organizer, I want to set the trip dates and destination so everyone knows the basics
-- As an organizer, I want to see all expenses in one place so I can track the budget
-- As an organizer, I want to edit any item if corrections are needed
+**Contribution / split**
 
-### Trip Contributor
-
-- As a contributor, I want to accept an invite and create an account
-- As a contributor, I want to add ideas to the idea collection / backlog
-- As a contributor, I want to "like" ideas I'm interested in
-- As a contributor, I want to add ideas to the schedule (date-flexible or specific time)
-- As a contributor, I want to log expenses I paid for so I can get reimbursed
-- As a contributor, I want to see what I owe others so I can settle up
-
-## Trip Lifecycle
-
-- **Active**: Upcoming or in-progress trips
-- **Archived**: Past trips (displayed separately in UI)
-- Trip data remains available indefinitely for users with active accounts
+- Requested
+- Unpaid
+- Partly Paid
+- Fully Paid
 
 ## Success Metrics
 
-- Planning engagement (items added per trip)
-- Itinerary usage (items added to itinerary)
-- User retention (return trips planned)
+- Planning engagement (ideas per trip)
+- Schedule usage (ideas promoted to plan / travel legs)
+- Return trips planned
 - Expense settlement rate
 
 ## Out of Scope (v1)
 
-- Payment processing (Venmo/PayPal integration)
-- Flight/hotel booking within app
-- AI-powered idea suggestions
-- AI-powered flight lookups & suggestions
-- Photo uploads / gallery
-- Offline mode
-- Push notifications
-- SMS notifications
+- Payment processing (Venmo/PayPal/crypto rails)
+- Flight/hotel booking inside the app
+- AI idea generation / similarity (stories exist; deferred)
+- Full Pinterest/map presentation polish
+- Offline mode, push/SMS notifications
+- Monetization (freemium/ads)
 
----
+## Front-end note
+
+Product planning to date is backend/domain-heavy. The UI is a **thin functional shell**: auth, trip list, trip hub tabs (Ideas | Schedule | Expenses | Mates). Visual/map experience comes later.
+
+## Trip Lifecycle
+
+- **Active:** upcoming or in progress
+- **Archived:** past (still readable for members)
 
 ## Revision History
 
-| Date       | Author | Changes                                      |
-| ---------- | ------ | -------------------------------------------- |
-| 2026-01-14 | -      | Initial draft                                |
-| 2026-01-14 | -      | Added roles/permissions, notifications, decisions |
+| Date | Changes |
+| --- | --- |
+| 2026-01-14 | Initial draft (User/Organizer/Guest model) |
+| 2026-07-11 | Reconciled with Notion: Traveler/Tripmate/TripStop, 4 roles, settlement statuses, phased UI shell |
+| 2026-07-11 | Phase 2 Ideas implemented (CRUD, comments, likes; simple card UI) |

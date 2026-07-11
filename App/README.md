@@ -14,14 +14,17 @@ App/
 
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env      # Edit with your database credentials
+cp .env.example .env
+# From repo root: docker compose up -d
+alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-Backend runs at http://localhost:8000
+Backend runs at http://localhost:8000  
+OpenAPI docs: http://localhost:8000/docs
 
 ## Frontend Setup
 
@@ -36,3 +39,4 @@ Frontend runs at http://localhost:3000
 ## API Proxy
 
 The frontend proxies `/api/*` requests to the backend at `http://localhost:8000/*`.
+Example: browser `GET /api/v1/trips` → FastAPI `GET /v1/trips`.
